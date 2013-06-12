@@ -1,8 +1,6 @@
 solf : solvent-finder
 =====================
 
-Live app: http://thinkski.github.io/solf
-
 This is a single page web app for finding chemical solvents with desired properties, namely
 within specific hydrogen bonding and molar volume ranges.
 
