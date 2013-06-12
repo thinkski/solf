@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+ "http://www.w3.org/TR/html3/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Solvent Finder</title>
+
+  <!-- stylesheets -->
+  <link rel="stylesheet" href="css/style.css?20121012" />
+  <link rel="stylesheet" href="css/jquery-ui-1.9.0.css" />
+  <link rel="stylesheet" href="css/page.css">
+  <link rel="stylesheet" href="css/table.css">
+
+  <!-- jquery plugins -->
+  <script src="js/jquery-1.8.2.min.js"></script>
+  <script src="js/jquery-ui-1.9.0.min.js"></script>
+  <script src="js/jquery.dataTables.min.js"></script>
+
+  <!-- load solvent data -->
+  <script src="data.js"></script>
+
+  <script type="text/javascript" charset="utf-8">
+    var hbmin = 0;
+    var hbmax = 65;
+    var mvmin = 0;
+    var mvmax = 650;
+
+    // custom data filtering function
+    $.fn.dataTableExt.afnFiltering.push(
+      function( oSettings, aData, iDataIndex ) {
+        var hb = aData[3];
+        var mv = aData[4];
+
+        if ( ((hb == "-") || ((hbmin <= hb) && (hb <= hbmax))) &&
+             ((mv == "-") || ((mvmin <= mv) && (mv <= mvmax))) ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    );
+    
+    // main application
+    $(document).ready(
+      function() {
+
+        // initialize data table
+        var oTable = $( "#solvent-table" ).dataTable({
+          "aaData": data,
+          "bjQueryUI": true,
+          "bPaginate": false,
+          "bLengthChange": false,
+          "bInfo": false,
+          "bFilter": true,
+          "sScrollY": ($(window).height() - 330),
+          "sDom": '<"H"lr>t<"F"ip>'
+        });
+  
+        // initialize hydrogen-bonding range slider
+        $( "#hbslider" ).slider({
+          range: true,
+          min: 0,
+          max: 65,
+          values: [ hbmin, hbmax ],
+          step: 0.1,
+          slide: function( event, ui ) {
+            hbmin = ui.values[ 0 ];
+            hbmax = ui.values[ 1 ];
+            $( "#hbrange" ).val( hbmin + " - " + hbmax );
+            oTable.fnDraw();
+          },
+        });
+        $( "#hbrange" ).val( $( "#hbslider" ).slider( "values", 0) + " - " +
+                             $( "#hbslider" ).slider( "values", 1 ) );
+  
+        // initialize molar-volume range slider
+        $( "#mvslider" ).slider({
+          min: 0,
+          max: 650,
+          range: true,
+          step: 0.1,
+          slide: function( event, ui ) {
+            mvmin = ui.values[ 0 ];
+            mvmax = ui.values[ 1 ];
+            $( "#mvrange" ).val( mvmin + " - " + mvmax );
+            oTable.fnDraw();
+          },
+          values: [ mvmin, mvmax ]
+        });
+        $( "#mvrange" ).val( $( "#mvslider" ).slider( "values", 0) + " - " +
+                             $( "#mvslider" ).slider( "values", 1 ) );
+  
+        // set initial column sizes
+        function setColumnSizes() {
+          $( "#left" ).height( $(window).height() - 300 );
+          var rh = $( "#right" ).height( $(window).height() - 300 );
+          $( "#left" ).width( ($(window).width() - 140) / 2 );
+          $( "#right" ).width( ($(window).width() - 140) / 2 );
+          oTable.fnAdjustColumnSizing();
+  
+          $('.dataTables_scrollBody').css('height', ($(window).height() - 330 ));
+        }
+  
+        // bind window resize to column size
+        $(window).resize(function() {
+          setColumnSizes();
+        });
+  
+        // set initial column sizes
+        setColumnSizes();
+    });
+  </script>
+
+</head>
+<body>
+
+  <h1><span style="color:red;">s</span><span style="color:orange;">o</span><span style="color:green;">l</span><span style="color:blue;">f</span> : solvent finder</h1>
+
+  <div id="slogan">"The chemical engineer's trusty companion"</div>
+
+  <!-- layout container for columns -->
+  <div id="container">
+
+    <!-- left column -->
+    <div id="left">
+      <!-- range slider for hydrogen bonding -->
+      <p>
+        <label for="hbrange">Hydrogen bonding range (in MPa<sup>1/2</sup>):</label>
+        <input type="text" id="hbrange"style="border: 0; color: #f6931f;
+                                               font-weight: bold;
+                                               background-color:#eee;" />
+        <div id="hbslider"></div>
+      </p>
+
+      <!-- range slider for hydrogen bonding -->
+      <p>
+        <label for="mvrange">Molar volume range (in cc/mol):</label>
+        <input type="text" id="mvrange" style="border: 0; color: #f6931f;
+                                               font-weight: bold;
+                                               background-color:#eee;" />
+        <div id="mvslider"></div>
+      </p>
+    </div>
+
+    <!-- right column -->
+    <div id="right">
+      <table cellpadding=0 cellspacing=0 border=0 class=display id="solvent-table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Dispersion</th>
+            <th>Polarity</th>
+            <th>H-Bonding</th>
+            <th>Molar Vol</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer bar -->
+  <div id="footer">
+    <p>
+      Copyright &copy; 2012-2013 <a href="..">Chris Hiszpanski</a>.
+      All rights reserved.
+    </p>
+  </div>
+
+  <!-- fork me ribbon -->
+<a href="https://github.com/thinkski/solvent-finder"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+</body>
+</html>
