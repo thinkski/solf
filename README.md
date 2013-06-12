@@ -1,7 +1,7 @@
 solf : solvent-finder
 =====================
 
-This is a single page web app for find chemical solvents with desired properties, namely
+This is a single page web app for finding chemical solvents with desired properties, namely
 within specific hydrogen bonding and molar volume ranges.
 
 Solvent numbers correspond to those in Appendix A, Table A.1 of
