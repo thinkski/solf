@@ -38,6 +38,8 @@ a:hover {
 
 #instructions {
 	color: #444;
+	margin-top: -15px;
+	margin-bottom: 35px;
 	font-size: 10pt;
 }
 
