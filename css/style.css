@@ -36,6 +36,14 @@ a:hover {
 	font-size: 10pt;
 }
 
+#instructions {
+	color: #444;
+	margin-left: 15px;
+	margin-top: -15px;
+	margin-bottom: 35px;
+	font-size: 10pt;
+}
+
 #container {
 	clear: both;
 }
